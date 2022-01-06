@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 public class TaskManager {
     ArrayList<Task> tasks;
     TaskManager() {
@@ -18,6 +20,17 @@ public class TaskManager {
         t.setId(tasks.size());
         tasks.add(t);
         return t;
+    }
+    static ArrayList<Task> filterByDay(ArrayList<Task> tasks, int day) {
+        if (day == 0) {return tasks};
+        LocalDate now = LocalDate.now();
+        ArrayList<Task> filtered = new ArrayList<Task>();
+        tasks.forEach((task) -> {
+            LocalDate taskDay = task.getNextDue().toLocalDate();
+            int dayDiff = (int) ChronoUnit.DAYS.between(now,taskDay);
+            if (dayDiff <= day)
+        });
+
     }
     
 

@@ -12,7 +12,7 @@ public class Manager {
     public void setTasker(TaskManager tasker) {
         this.tasker = tasker;
     }
-
+    
     @Override
     public String toString() {
         return "{" +
