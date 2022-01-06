@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 public class TaskManager {
@@ -47,6 +49,7 @@ public class TaskManager {
 
     }
     /*
+    
     TODO: Implement Groups
     static ArrayList<Task> filterByGroup(ArrayList<Task> tasks, ArrayList<String> groups) {
         if (groups.equals("")) {return tasks;};
@@ -60,7 +63,33 @@ public class TaskManager {
 
     }
     */
-    
+    static ArrayList<Task> sortByDay(ArrayList<Task> tasks) {
+        ArrayList<Task> sorted = tasks;
+        Collections.sort(sorted,new Comparator<Task>(){
+            public int compare(Task t1,Task t2) {
+                LocalDate d1 = t1.getNextDue().toLocalDate();
+                LocalDate d2 = t2.getNextDue().toLocalDate();
+                return (int) ChronoUnit.DAYS.between(d1,d2);
+            }
+        });
+
+        return sorted;
+
+    }
+
+    static ArrayList<Task> sortByPriority(ArrayList<Task> tasks) {
+        ArrayList<Task> sorted = tasks;
+        Collections.sort(sorted,new Comparator<Task>(){
+            public int compare(Task t1,Task t2) {
+                int p1 = t1.priority;
+                int p2 = t2.priority;
+                return p1-p2;
+            }
+        });
+
+        return sorted;
+
+    }
 
     @Override
     public String toString() {
