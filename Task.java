@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.awt.Color;
+import java.time.LocalDate;
 public class Task {
     String name;
     LocalDateTime created;
@@ -71,6 +72,10 @@ public class Task {
 
     public void setNextDue(LocalDateTime nextDue) {
         this.nextDue = nextDue;
+    }
+
+    public void setNextDue(LocalDate nextDue) {
+        this.nextDue = nextDue.atTime(23,59,59);
     }
 
     public String getCronJob() {
