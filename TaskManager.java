@@ -22,16 +22,44 @@ public class TaskManager {
         return t;
     }
     static ArrayList<Task> filterByDay(ArrayList<Task> tasks, int day) {
-        if (day == 0) {return tasks};
+        if (day == 0) {return tasks;};
         LocalDate now = LocalDate.now();
         ArrayList<Task> filtered = new ArrayList<Task>();
         tasks.forEach((task) -> {
             LocalDate taskDay = task.getNextDue().toLocalDate();
             int dayDiff = (int) ChronoUnit.DAYS.between(now,taskDay);
-            if (dayDiff <= day)
+            if (dayDiff <= day) {
+                filtered.add(task);
+            }
         });
+        return filtered;
 
     }
+    static ArrayList<Task> filterByPriority(ArrayList<Task> tasks, int priority) {
+        if (priority == 0) {return tasks;};
+        ArrayList<Task> filtered = new ArrayList<Task>();
+        tasks.forEach((task) -> {
+            if (task.priority >= priority) {
+                filtered.add(task);
+            }
+        });
+        return filtered;
+
+    }
+    /*
+    TODO: Implement Groups
+    static ArrayList<Task> filterByGroup(ArrayList<Task> tasks, ArrayList<String> groups) {
+        if (groups.equals("")) {return tasks;};
+        ArrayList<Task> filtered = new ArrayList<Task>();
+        tasks.forEach((task) -> {
+            if (groups.contains(task.group)) {
+                filtered.add(task);
+            }
+        });
+        return filtered;
+
+    }
+    */
     
 
     @Override
