@@ -3,8 +3,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+
 public class TaskManager {
     ArrayList<Task> tasks;
+
     TaskManager() {
         tasks = new ArrayList<Task>();
     }
@@ -17,19 +19,27 @@ public class TaskManager {
         this.tasks = tasks;
     }
 
+    public void addTask(Task task) {
+        task.setId(tasks.size());
+        tasks.add(task);
+    }
+
     public Task blankTask() {
         Task t = new Task();
         t.setId(tasks.size());
-        tasks.add(t);
         return t;
     }
+
     static ArrayList<Task> filterByDay(ArrayList<Task> tasks, int day) {
-        if (day == 0) {return tasks;};
+        if (day == 0) {
+            return tasks;
+        }
+        ;
         LocalDate now = LocalDate.now();
         ArrayList<Task> filtered = new ArrayList<Task>();
         tasks.forEach((task) -> {
             LocalDate taskDay = task.getNextDue().toLocalDate();
-            int dayDiff = (int) ChronoUnit.DAYS.between(now,taskDay);
+            int dayDiff = (int) ChronoUnit.DAYS.between(now, taskDay);
             if (dayDiff <= day) {
                 filtered.add(task);
             }
@@ -37,8 +47,12 @@ public class TaskManager {
         return filtered;
 
     }
+
     static ArrayList<Task> filterByPriority(ArrayList<Task> tasks, int priority) {
-        if (priority == 0) {return tasks;};
+        if (priority == 0) {
+            return tasks;
+        }
+        ;
         ArrayList<Task> filtered = new ArrayList<Task>();
         tasks.forEach((task) -> {
             if (task.priority >= priority) {
@@ -48,28 +62,30 @@ public class TaskManager {
         return filtered;
 
     }
-    /*
-    
-    TODO: Implement Groups
-    static ArrayList<Task> filterByGroup(ArrayList<Task> tasks, ArrayList<String> groups) {
-        if (groups.equals("")) {return tasks;};
-        ArrayList<Task> filtered = new ArrayList<Task>();
-        tasks.forEach((task) -> {
-            if (groups.contains(task.group)) {
-                filtered.add(task);
-            }
-        });
-        return filtered;
 
-    }
-    */
+    /*
+     * 
+     * TODO: Implement Groups
+     * static ArrayList<Task> filterByGroup(ArrayList<Task> tasks, ArrayList<String>
+     * groups) {
+     * if (groups.equals("")) {return tasks;};
+     * ArrayList<Task> filtered = new ArrayList<Task>();
+     * tasks.forEach((task) -> {
+     * if (groups.contains(task.group)) {
+     * filtered.add(task);
+     * }
+     * });
+     * return filtered;
+     * 
+     * }
+     */
     static ArrayList<Task> sortByDay(ArrayList<Task> tasks) {
         ArrayList<Task> sorted = tasks;
-        Collections.sort(sorted,new Comparator<Task>(){
-            public int compare(Task t1,Task t2) {
+        Collections.sort(sorted, new Comparator<Task>() {
+            public int compare(Task t1, Task t2) {
                 LocalDate d1 = t1.getNextDue().toLocalDate();
                 LocalDate d2 = t2.getNextDue().toLocalDate();
-                return (int) ChronoUnit.DAYS.between(d1,d2);
+                return (int) ChronoUnit.DAYS.between(d1, d2);
             }
         });
 
@@ -79,11 +95,11 @@ public class TaskManager {
 
     static ArrayList<Task> sortByPriority(ArrayList<Task> tasks) {
         ArrayList<Task> sorted = tasks;
-        Collections.sort(sorted,new Comparator<Task>(){
-            public int compare(Task t1,Task t2) {
+        Collections.sort(sorted, new Comparator<Task>() {
+            public int compare(Task t1, Task t2) {
                 int p1 = t1.priority;
                 int p2 = t2.priority;
-                return p1-p2;
+                return p1 - p2;
             }
         });
 
@@ -94,8 +110,32 @@ public class TaskManager {
     @Override
     public String toString() {
         return "{" +
-            " tasks='" + getTasks() + "'" +
-            "}";
+                " tasks='" + getTasks() + "'" +
+                "}";
     }
-    
+
+    static public String printTasks(ArrayList<Task> tasks) {
+        if (tasks.size() == 0) {
+            return "No tasks!";
+        }
+        String output = "";
+        for (int i = 0; i < tasks.size(); i++) {
+            Task t = tasks.get(i);
+            output += String.format("%s - Due: %s - Done: %s - Priority: %d\n", t.name, t.nextDue, t.done, t.priority);
+        }
+        return output;
+    }
+
+    public String printTasks() {
+        ArrayList<Task> tasks = this.tasks;
+        if (tasks.size() == 0) {
+            return "No tasks!";
+        }
+        String output = "";
+        for (int i = 0; i < tasks.size(); i++) {
+            Task t = tasks.get(i);
+            output += String.format("%s - Due: %s - Done: %s - Priority: %d\n", t.name, t.nextDue, t.done, t.priority);
+        }
+        return output;
+    }
 }

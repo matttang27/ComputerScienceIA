@@ -1,6 +1,9 @@
 import java.time.LocalDateTime;
 import java.awt.Color;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 public class Task {
     String name;
     LocalDateTime created;
@@ -41,7 +44,20 @@ public class Task {
         lastEdited = LocalDateTime.now();
         done = false;
     }
-
+    public Task(String name,LocalDateTime due,int priority) {
+        this.name = name;
+        this.nextDue = due;
+        this.priority = priority;
+       
+        color=null;
+        background="";
+        icon="";
+        description="";
+        created = LocalDateTime.now();
+        lastEdited = LocalDateTime.now();
+        done = false;
+        
+    }
     public String getName() {
         return this.name;
     }
