@@ -18,7 +18,7 @@ public class Task {
     Task parent;
     String description;
     int id;
-
+    //Why do i have 3 constructors? ... that's a good question.
     public Task(String name, LocalDateTime created, LocalDateTime lastEdited, LocalDateTime nextDue, String cronJob, int priority, boolean done, Color color, String background, String icon, Task parent, String description, int id) {
         this.name = name;
         this.created = created;
