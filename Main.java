@@ -68,7 +68,7 @@ class Main {
                 int chosen;
                 String[][] filter = {{"",""},{"",""},{"",""},{"",""}};
                 while (!texit) {
-                    System.out.println("\nTasks Page:\n1) View tasks\n2) Add Task\n3) Delete Task\n4) Change Sort\n5) Change Filter\n6) Edit Task\n7) Back to Nav");
+                    System.out.println("\nTasks Page:\n1) View tasks\n2) Add Task\n3) Delete Task\n4) Change Sort\n5) Change Filter\n6) Open Task\n7) Back to Nav");
                     switch (input.nextLine()) {
                         case "1":
                             System.out.println("Tasks:\n");
@@ -152,9 +152,14 @@ class Main {
                                 System.out.println("No tasks");
                                 break;
                             }
-                            System.out.println("Choose the task you wish to edit: ");
+                            System.out.println("Choose the task you wish to open: ");\
+                            //TODO: EDIT LATER
                             Task editTask = TaskManager.chooseTask(input,taskManager.getTasks());
 
+                            System.out.println(editTask.toString());
+
+                            System.out.println("\n1) Edit Property\n2) Delete Task\n3) Add SubTask\n4) Open SubTask\n5)");
+                            
                             System.out.println("What property would you like to change?\n\n1) Name\n2) Due\n3) Priority");
                             switch (intInput(input,3)) {
                                 case 1:
@@ -172,6 +177,7 @@ class Main {
                                     editTask.setPriority(Integer.parseInt(input.nextLine()));
                                     break;
                             }
+                            editTask.setLastEdited(LocalDateTime.now());
                             System.out.println("Your task has been edited.");
 
                             break;

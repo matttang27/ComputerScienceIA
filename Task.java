@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -18,8 +19,11 @@ public class Task {
     Task parent;
     String description;
     int id;
+    ArrayList<Task> children;
+    String type;
     //Why do i have 3 constructors? ... that's a good question.
-    public Task(String name, LocalDateTime created, LocalDateTime lastEdited, LocalDateTime nextDue, String cronJob, int priority, boolean done, Color color, String background, String icon, Task parent, String description, int id) {
+
+    public Task(String name, LocalDateTime created, LocalDateTime lastEdited, LocalDateTime nextDue, String cronJob, int priority, boolean done, Color color, String background, String icon, Task parent, String description, int id, ArrayList<Task> children, String type) {
         this.name = name;
         this.created = created;
         this.lastEdited = lastEdited;
@@ -33,7 +37,10 @@ public class Task {
         this.parent = parent;
         this.description = description;
         this.id = id;
+        this.children = children;
+        this.type = type;
     }
+    
     public Task() {
         name="Blank Task";
         color=null;
@@ -43,6 +50,8 @@ public class Task {
         created = LocalDateTime.now();
         lastEdited = LocalDateTime.now();
         done = false;
+        children = new ArrayList<Task>();
+        type = "task";
     }
     public Task(String name,LocalDateTime due,int priority) {
         this.name = name;
@@ -56,7 +65,8 @@ public class Task {
         created = LocalDateTime.now();
         lastEdited = LocalDateTime.now();
         done = false;
-        
+        children = new ArrayList<Task>();
+        type = "task";
     }
     public String getName() {
         return this.name;
@@ -191,7 +201,7 @@ public class Task {
 
     public Task clone(){ 
         //thank god for vscode
-        return new Task(name, created, lastEdited, nextDue, cronJob, priority, done, color, background, icon, parent, description, id);
+        return new Task(name, created, lastEdited, nextDue, cronJob, priority, done, color, background, icon, parent, description, id, children, type);
     }
 
 }
