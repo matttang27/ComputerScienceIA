@@ -28,6 +28,7 @@ public class TaskManager {
     public Task blankTask() {
         Task t = new Task();
         t.setId(tasks.size());
+        tasks.add(t);
         return t;
     }
 
@@ -93,10 +94,7 @@ public class TaskManager {
     }
 
     static ArrayList<Task> filterByDay(ArrayList<Task> tasks, int day, int over) {
-        if (day == 0) {
-            return tasks;
-        }
-        ;
+        
         LocalDate now = LocalDate.now();
         ArrayList<Task> filtered = new ArrayList<Task>();
         tasks.forEach((task) -> {
@@ -167,19 +165,22 @@ public class TaskManager {
      * }
      */
 
-    static ArrayList<Task> sortByAlpha(ArrayList<Task> tasks, String alpha) {
-        ArrayList<Task> sorted = tasks;
+    static ArrayList<Task> sortByAlpha(ArrayList<Task> tasks, Boolean ascending) {
+        ArrayList<Task> sorted = TaskManager.cloneTasks(tasks);
         Collections.sort(sorted, new Comparator<Task>() {
             public int compare(Task t1, Task t2) {
                 return t1.name.compareToIgnoreCase(t2.name);
             }
         });
 
+        if (!ascending) {
+            Collections.reverse(sorted);
+        }
         return sorted;
 
     }
 
-    static ArrayList<Task> sortByDay(ArrayList<Task> tasks) {
+    static ArrayList<Task> sortByDay(ArrayList<Task> tasks, Boolean ascending) {
         ArrayList<Task> sorted = tasks;
         Collections.sort(sorted, new Comparator<Task>() {
             public int compare(Task t1, Task t2) {
@@ -189,11 +190,14 @@ public class TaskManager {
             }
         });
 
+        if (!ascending) {
+            Collections.reverse(sorted);
+        }
         return sorted;
 
     }
 
-    static ArrayList<Task> sortByPriority(ArrayList<Task> tasks) {
+    static ArrayList<Task> sortByPriority(ArrayList<Task> tasks, Boolean ascending) {
         ArrayList<Task> sorted = tasks;
         Collections.sort(sorted, new Comparator<Task>() {
             public int compare(Task t1, Task t2) {
@@ -203,6 +207,10 @@ public class TaskManager {
             }
         });
 
+        if (!ascending) {
+            Collections.reverse(sorted);
+        }
+        
         return sorted;
 
     }
@@ -256,5 +264,55 @@ public class TaskManager {
         return tasks.get(a-1);
 
         
+    }
+
+    //creates a deep copy (i think that's the term?) of the tasks
+    public ArrayList<Task> cloneTasks() {
+        ArrayList<Task> a = new ArrayList<Task>(tasks.size());
+        for (Task t: tasks) {
+            a.add((Task) t.clone());
+        }
+        return a;
+    }
+
+    static public ArrayList<Task> cloneTasks(ArrayList<Task> tasks) {
+        ArrayList<Task> a = new ArrayList<Task>(tasks.size());
+        for (Task t: tasks) {
+            a.add((Task) t.clone());
+        }
+        return a;
+    }
+
+    //used for task sorting & filtering in the Main.java
+    static public ArrayList<Task> taskSortFilter(String sort,Boolean ascending, String[][] filter, ArrayList<Task> original) {
+        ArrayList<Task> newTasks = TaskManager.cloneTasks(original);
+        //index 0: alpha, 1: day, 2: priority
+        //inside array:
+        //index 0: -1: <=, 0: ==, 1: >=
+        //index 1: actual value
+
+        //1. Sort
+        if (sort.equals("alpha")) {
+            newTasks = TaskManager.sortByAlpha(newTasks, ascending);
+        }
+        else if (sort.equals("day")) {
+            newTasks = TaskManager.sortByDay(newTasks, ascending);
+        }
+        else if (sort.equals("priority")) {
+            newTasks = TaskManager.sortByPriority(newTasks, ascending);
+        }
+
+        //2. Filters
+        if (!filter[0][0].equals("") && !filter[0][1].equals("")) {
+            newTasks = TaskManager.filterByAlpha(newTasks, filter[0][1], Integer.parseInt(filter[0][0]));
+        }
+        if (!filter[1][0].equals("") && !filter[1][1].equals("")) {
+            newTasks = TaskManager.filterByDay(newTasks, Integer.parseInt(filter[1][1]), Integer.parseInt(filter[1][0]));
+        }
+        if (!filter[2][0].equals("") && !filter[2][1].equals("")) {
+            newTasks = TaskManager.filterByPriority(newTasks, Integer.parseInt(filter[2][1]), Integer.parseInt(filter[2][0]));
+        }
+
+        return newTasks;
     }
 }

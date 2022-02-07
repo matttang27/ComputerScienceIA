@@ -189,4 +189,9 @@ public class Task {
         this.id = id;
     }
 
+    public Task clone(){ 
+        //thank god for vscode
+        return new Task(name, created, lastEdited, nextDue, cronJob, priority, done, color, background, icon, parent, description, id);
+    }
+
 }
