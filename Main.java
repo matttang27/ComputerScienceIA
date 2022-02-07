@@ -55,8 +55,8 @@ class Main {
                 Boolean texit = false;
                 ArrayList<Task> tempTasks = taskManager.cloneTasks();
                 
-                String sort = "alpha";
-                Boolean ascending = true;
+                String sort = "created";
+                Boolean ascending = false;
                 //while sort can be a single string (there is only one way to sort at a time),
                 //filter is more complicated because there can be multiple filters
                 //and you have to be able to remove filters
@@ -66,7 +66,7 @@ class Main {
                 //index 0: -1: <=, 0: ==, 1: >=
                 //index 1: actual value
                 int chosen;
-                String[][] filter = {{"",""},{"",""},{"",""}};
+                String[][] filter = {{"",""},{"",""},{"",""},{"",""}};
                 while (!texit) {
                     System.out.println("\nTasks Page:\n1) View tasks\n2) Add Task\n3) Delete Task\n4) Change Sort\n5) Change Filter\n6) Edit Task\n7) Back to Nav");
                     switch (input.nextLine()) {
@@ -116,47 +116,65 @@ class Main {
                             }
                             break;
                         case "4":
-                            System.out.println("Choose sort property: \n1) Alphabetical\n2) Due Date\n3) Priority");
-                            chosen = Main.intInput(input,3);
+                            System.out.println("Choose sort property: \n1) Alphabetical\n2) Due Date\n3) Priority\n4) Created Time");
+                            chosen = Main.intInput(input,4);
                             System.out.println("1) Ascending\n2) Descending");
                             
                             ascending = (Main.intInput(input,2) == 1);
-                            if (chosen == 1) {
-                                sort = "alpha";
-
-                            }
-                            else if (chosen == 2) {
-                                sort = "day";
-                            }
-                            else if (chosen == 3) {
-                                sort = "priority";
-                            }
+                            sort = new String[]{"alpha","due","priority","created"}[chosen-1];
+                            
 
                             //this is a goddamn lie but they'll never know
                             System.out.println("The tasks have been sorted.");
                             break;
                         case "5":
-                            System.out.println("Choose filter property: \n1) Alphabetical\n2) Due Date\n3) Priority");
-                            chosen = Main.intInput(input,3);
+                            System.out.println("Choose filter property: \n1) Alphabetical\n2) Due Date\n3) Priority\n4) Created Time");
+                            chosen = Main.intInput(input,4);
 
                             System.out.println("Choose compare function: \n1) <=\n2) ==\n3) >=\n4) Remove");
-                            String cf = Integer.toString(Main.intInput(input,3) - 2);
+                            String cf = Integer.toString(Main.intInput(input,4) - 2);
+                            //<= = -1, so you subtract 2
                             if (cf.equals("2")) {
                                 filter[chosen-1][0] = "";
                                 filter[chosen-1][1] = "";
                                 break;
                             }
                             else {
-                                filter[chosen-1][0] = Integer.toString(Integer.parseInt(cf) - 2);
+                                filter[chosen-1][0] = Integer.toString(Integer.parseInt(cf));
                                 //It would be a great idea to sanitize this but 
                                 System.out.println("Threshold:");
                                 filter[chosen-1][1] = input.nextLine();
                             }
-                            
+                        
+                            break;
+                        case "6":
+                            if (taskManager.getTasks().size() == 0) {
+                                System.out.println("No tasks");
+                                break;
+                            }
+                            System.out.println("Choose the task you wish to edit: ");
+                            Task editTask = TaskManager.chooseTask(input,taskManager.getTasks());
+
+                            System.out.println("What property would you like to change?\n\n1) Name\n2) Due\n3) Priority");
+                            switch (intInput(input,3)) {
+                                case 1:
+                                    System.out.println("Enter new name: ");
+                                    editTask.setName(input.nextLine());
+                                    break;
+                                case 2:
+                                    System.out.println("Enter new due Time (yyyy-MM-dd HH:mm)");
+                                    formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                                    due = LocalDateTime.parse(input.nextLine(), formatter);
+                                    editTask.setNextDue(due);
+                                    break;
+                                case 3:
+                                    System.out.println("Enter new priority");
+                                    editTask.setPriority(Integer.parseInt(input.nextLine()));
+                                    break;
+                            }
+                            System.out.println("Your task has been edited.");
 
                             break;
-                            
-                            
                             
 
                         case "7":

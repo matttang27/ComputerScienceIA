@@ -3,6 +3,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class TaskManager {
@@ -93,7 +94,7 @@ public class TaskManager {
 
     }
 
-    static ArrayList<Task> filterByDay(ArrayList<Task> tasks, int day, int over) {
+    static ArrayList<Task> filterByDue(ArrayList<Task> tasks, int day, int over) {
         
         LocalDate now = LocalDate.now();
         ArrayList<Task> filtered = new ArrayList<Task>();
@@ -120,6 +121,35 @@ public class TaskManager {
         return filtered;
 
     }
+
+    static ArrayList<Task> filterByCreated(ArrayList<Task> tasks, int day, int over) {
+        
+        LocalDate now = LocalDate.now();
+        ArrayList<Task> filtered = new ArrayList<Task>();
+        tasks.forEach((task) -> {
+            LocalDate taskDay = task.getCreated().toLocalDate();
+            int dayDiff = (int) ChronoUnit.DAYS.between(now, taskDay);
+            if (over == -1) {
+                if (dayDiff <= day) {
+                    filtered.add(task);
+                }
+            }
+            else if (over == 0) {
+                if (dayDiff == day) {
+                    filtered.add(task);
+                }
+            }
+            else if (over == 1) {
+                if (dayDiff >= day) {
+                    filtered.add(task);
+                }
+            }
+
+        });
+        return filtered;
+
+    }
+
 
     static ArrayList<Task> filterByPriority(ArrayList<Task> tasks, int priority, int over) {
         if (priority == 0) {
@@ -180,13 +210,30 @@ public class TaskManager {
 
     }
 
-    static ArrayList<Task> sortByDay(ArrayList<Task> tasks, Boolean ascending) {
+    static ArrayList<Task> sortByDue(ArrayList<Task> tasks, Boolean ascending) {
         ArrayList<Task> sorted = tasks;
         Collections.sort(sorted, new Comparator<Task>() {
             public int compare(Task t1, Task t2) {
-                LocalDate d1 = t1.getNextDue().toLocalDate();
-                LocalDate d2 = t2.getNextDue().toLocalDate();
-                return (int) ChronoUnit.DAYS.between(d1, d2);
+                LocalDateTime d1 = t1.getNextDue();
+                LocalDateTime d2 = t2.getNextDue();
+                return d1.compareTo(d2);
+            }
+        });
+
+        if (!ascending) {
+            Collections.reverse(sorted);
+        }
+        return sorted;
+
+    }
+
+    static ArrayList<Task> sortByCreated(ArrayList<Task> tasks, Boolean ascending) {
+        ArrayList<Task> sorted = tasks;
+        Collections.sort(sorted, new Comparator<Task>() {
+            public int compare(Task t1, Task t2) {
+                LocalDateTime d1 = t1.getCreated();
+                LocalDateTime d2 = t2.getCreated();
+                return d1.compareTo(d2);
             }
         });
 
@@ -210,7 +257,7 @@ public class TaskManager {
         if (!ascending) {
             Collections.reverse(sorted);
         }
-        
+
         return sorted;
 
     }
@@ -295,11 +342,14 @@ public class TaskManager {
         if (sort.equals("alpha")) {
             newTasks = TaskManager.sortByAlpha(newTasks, ascending);
         }
-        else if (sort.equals("day")) {
-            newTasks = TaskManager.sortByDay(newTasks, ascending);
+        else if (sort.equals("due")) {
+            newTasks = TaskManager.sortByDue(newTasks, ascending);
         }
         else if (sort.equals("priority")) {
             newTasks = TaskManager.sortByPriority(newTasks, ascending);
+        }
+        else if (sort.equals("created")) {
+            newTasks = TaskManager.sortByCreated(newTasks, ascending);
         }
 
         //2. Filters
@@ -307,10 +357,13 @@ public class TaskManager {
             newTasks = TaskManager.filterByAlpha(newTasks, filter[0][1], Integer.parseInt(filter[0][0]));
         }
         if (!filter[1][0].equals("") && !filter[1][1].equals("")) {
-            newTasks = TaskManager.filterByDay(newTasks, Integer.parseInt(filter[1][1]), Integer.parseInt(filter[1][0]));
+            newTasks = TaskManager.filterByDue(newTasks, Integer.parseInt(filter[1][1]), Integer.parseInt(filter[1][0]));
         }
         if (!filter[2][0].equals("") && !filter[2][1].equals("")) {
             newTasks = TaskManager.filterByPriority(newTasks, Integer.parseInt(filter[2][1]), Integer.parseInt(filter[2][0]));
+        }
+        if (!filter[3][0].equals("") && !filter[3][1].equals("")) {
+            newTasks = TaskManager.filterByCreated(newTasks, Integer.parseInt(filter[3][1]), Integer.parseInt(filter[3][0]));
         }
 
         return newTasks;
