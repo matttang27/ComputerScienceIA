@@ -10,6 +10,22 @@ public class Task {
     LocalDateTime created;
     LocalDateTime lastEdited;
     LocalDateTime nextDue;
+
+    public ArrayList<Task> getChildren() {
+        return this.children;
+    }
+
+    public void setChildren(ArrayList<Task> children) {
+        this.children = children;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
     String cronJob;
     int priority;
     boolean done;
