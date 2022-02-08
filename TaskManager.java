@@ -8,9 +8,11 @@ import java.time.temporal.ChronoUnit;
 
 public class TaskManager {
     ArrayList<Task> tasks;
+    
 
     TaskManager() {
         tasks = new ArrayList<Task>();
+        
     }
 
     public ArrayList<Task> getTasks() {

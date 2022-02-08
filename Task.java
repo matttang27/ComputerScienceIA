@@ -36,6 +36,7 @@ public class Task {
     String description;
     int id;
     ArrayList<Task> children;
+    //note that a group is just a task with a different string haha shhhhhhhh
     String type;
     //Why do i have 3 constructors? ... that's a good question.
 

@@ -14,7 +14,7 @@ class Main {
     public static final String BLOCK = "█";
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\033[38;2;255;143;184m";
-    public static final ArrayList<String> PAGE_LIST = new ArrayList<>(Arrays.asList("home", "tasks", "exit"));
+    public static final ArrayList<String> PAGE_LIST = new ArrayList<>(Arrays.asList("home", "tasks", "groups","exit"));
 
     public static void main(String args[]) {
         Boolean invalid = false;
@@ -32,6 +32,7 @@ class Main {
         // I'll change it if it ever inconveniences me >:D
         Manager manager = new Manager();
         TaskManager taskManager = manager.getTasker();
+        GroupManager groupManager = manager.getGrouper();
         manager.setUser(user);
 
         String page = "home";
@@ -244,9 +245,13 @@ class Main {
                     }
                 }
 
-            } else if (page.equals("nav")) {
+            } 
+            else if (page.equals("groups")) {
+                System.out.println("Groups:");
+            }
+            else if (page.equals("nav")) {
                 invalid = true;
-                System.out.println("\nWhat would you like to do?\n\n1) Home\n2) Tasks\n3) Exit\n");
+                System.out.println("\nWhat would you like to do?\n\n1) Home\n2) Tasks\n3) Groups\n4) Exit\n");
 
                 int tpage = intInput(input, 3);
                 page = PAGE_LIST.get(tpage - 1);
